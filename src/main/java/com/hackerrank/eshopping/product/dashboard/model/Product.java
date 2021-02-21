@@ -1,12 +1,32 @@
 package com.hackerrank.eshopping.product.dashboard.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Formula;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
+@DynamicUpdate
 public class Product {
+    @Id
+    @Column(updatable = false, nullable = false)
     private Long id;
+    @Column(updatable = false)
     private String name;
+    @Column(updatable = false)
     private String category;
+    @JsonProperty("retail_price")
     private Double retailPrice;
+    @JsonProperty("discounted_price")
     private Double discountedPrice;
     private Boolean availability;
+    @JsonIgnore
+    @Formula(value="CEIL(((retail_price - discounted_price) / retail_price) * 100)")
+    private Integer percentage;
 
     public Product() {
     }
